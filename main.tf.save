@@ -1,0 +1,13 @@
+# defining the ressources
+
+resource "docker_network" "stack" {
+  name = "stack-net"
+}
+resource "docker_volume" "pgdata" {
+  name = "stack-pgdata"
+}
+
+resource "docker_image" "pg_image" {
+  name = "postgres:16-alpine"
+  
+}
