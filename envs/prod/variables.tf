@@ -1,23 +1,20 @@
+# defining the prod variables
+
 variable "db_user" {
-  description = "User of database"
-  default     = "appuser"
+  description = "Database user"
+  default     = "prod_db_user"
   type        = string
 }
 
 variable "db_name" {
   description = "Database name"
-  default     = "appdb"
+  default     = "prod-db"
   type        = string
 }
 
 variable "db_password" {
   description = "Database password"
+  default     = "kshiwjb*&#0937bf3UQ++_93"
   type        = string
   sensitive   = true
-}
-
-variable "external_port" {
-  description = "External port"
-  default     = 8080
-  type        = number
 }
