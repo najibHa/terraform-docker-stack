@@ -20,10 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v4
-
-        run: terraform fmt -check -recursive
-        run: terraform init -backend=false
-        run: terraform validate
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
 
   Checkov:
     runs-on: ubuntu-latest
