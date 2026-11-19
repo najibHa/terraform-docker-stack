@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  Terraform:
+    strategy:
+      matrix:
+        envs: [dev, prod]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: envs/${{ matrix.envs }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v4
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+
+  Checkov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Checkov scan
+        run: checkov -d . --framework terraform --soft-fail
+

@@ -4,3 +4,7 @@
 *.tfvars
 !terraform.tfvars.example
 crash.log
+backend.hcl
+tfplan
+.env
+minio-data/

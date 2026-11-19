@@ -1,10 +1,18 @@
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+    }
+  }
+}
+
 # defining the ressources
 
 resource "docker_network" "stack" {
-  name = "stack-net"
+  name = "stack-net-${var.env_name}"
 }
 resource "docker_volume" "pgdata" {
-  name = "stack-pgdata"
+  name = "stack-pgdata-${var.env_name}"
 }
 
 
@@ -21,16 +29,16 @@ resource "docker_image" "nginx_image" {
   keep_locally = true
 }
 resource "docker_image" "api_image" {
-  name         = "stack-api:latest"
+  name         = "${var.env_name}-stack-api:latest"
   keep_locally = true
   build {
-    context = "${path.module}/app"
+    context = var.app_path
   }
 }
 
 
 resource "docker_container" "db" {
-  name    = "db_container"
+  name    = "${var.env_name}-db"
   image   = docker_image.pg_image.image_id
   restart = "unless-stopped"
   env = [
@@ -39,7 +47,7 @@ resource "docker_container" "db" {
     "POSTGRES_DB=${var.db_name}"
   ]
   volumes {
-    volume_name    = "pg_volume"
+    volume_name    = docker_volume.pgdata.name
     container_path = "/var/lib/postgresql/data"
   }
   networks_advanced {
@@ -58,7 +66,7 @@ resource "docker_container" "db" {
 
 
 resource "docker_container" "cache" {
-  name    = "cache_container"
+  name    = "${var.env_name}-cache"
   image   = docker_image.redis_image.image_id
   restart = "unless-stopped"
   networks_advanced {
@@ -77,7 +85,7 @@ resource "docker_container" "cache" {
 
 
 resource "docker_container" "api" {
-  name       = "api_container"
+  name       = "${var.env_name}-api"
   image      = docker_image.api_image.image_id
   restart    = "unless-stopped"
   depends_on = [docker_container.db, docker_container.cache]
@@ -104,7 +112,7 @@ resource "docker_container" "api" {
 
 
 resource "docker_container" "nginx" {
-  name       = "nginx_container"
+  name       = "${var.env_name}-nginx"
   image      = docker_image.nginx_image.image_id
   restart    = "unless-stopped"
   depends_on = [docker_container.api]
@@ -113,7 +121,7 @@ resource "docker_container" "nginx" {
     aliases = ["nginx"]
   }
   volumes {
-    host_path      = "${abspath(path.module)}/nginx/nginx.conf"
+    host_path      = var.nginx_conf_path
     container_path = "/etc/nginx/nginx.conf"
     read_only      = true
   }

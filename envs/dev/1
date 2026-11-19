@@ -1,0 +1,5 @@
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mFailed to load "2" as a plan file[0m
+[31m│[0m [0m
+[31m│[0m [0m[0mError: GetFileAttributesEx 2: The system cannot find the file specified.
+[31m╵[0m[0m

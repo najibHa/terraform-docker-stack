@@ -1,0 +1,14 @@
+bucket = "YourBucketName"
+key    = "YourObjectKeyName"
+region = "Region (ex : us-east-1)"
+
+endpoints = {
+  s3 = "Your S3 service server url"
+}
+
+use_path_style               = true
+skip_credentials_validation  = true
+skip_metadata_api_check      = true
+skip_region_validation       = true
+skip_requesting_account_id   = true
+use_lockfile                 = true
