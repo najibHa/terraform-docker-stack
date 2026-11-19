@@ -1,4 +1,4 @@
-module "stack" {
+moduleeeeeeeeeeeeee "stack" {
   source          = "../../modules/stack"
   env_name        = "dev"
   external_port   = "8080"
